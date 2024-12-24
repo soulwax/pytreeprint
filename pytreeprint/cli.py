@@ -1,4 +1,5 @@
 """Command line interface for pytreeprint."""
+
 from dataclasses import dataclass
 from pathlib import Path
 from re import Pattern
@@ -7,15 +8,13 @@ import argparse
 from typing import Set, Optional, List
 
 from .types import TreeStats, NodeConfig
-from .tree import (
-    generate_tree,
-    compile_ignore_pattern, parse_pattern_file, DEFAULT_IGNORE_PATTERNS
-)
+from .tree import generate_tree, compile_ignore_pattern, parse_pattern_file, DEFAULT_IGNORE_PATTERNS
 
 
 @dataclass
 class TreeConfig:
     """Tree generation configuration."""
+
     target_dir: Path
     output_file: Path
     exclude_pattern: Optional[Pattern]
@@ -26,34 +25,33 @@ class TreeConfig:
 
 def create_parser() -> argparse.ArgumentParser:
     """Create and configure the argument parser."""
-    parser = argparse.ArgumentParser(
-        description='Generate a directory tree structure')
-    parser.add_argument('path', nargs='?', default='.',
-                        help='Directory path to map (default: current directory)')
-    parser.add_argument('-d', '--max-depth', type=int,
-                        help='Maximum depth to traverse')
-    parser.add_argument('-s', '--size', action='store_true',
-                        help='Show file sizes')
-    parser.add_argument('-t', '--time', action='store_true',
-                        help='Show modification times')
-    parser.add_argument('-c', '--color', action='store_true',
-                        help='Colorize output')
-    parser.add_argument('-o', '--output', type=str,
-                        help='Output file path (default: tree.txt in target directory)')
-    parser.add_argument('--stats', action='store_true',
-                        help='Show summary statistics')
-    parser.add_argument('--no-color', action='store_true',
-                        help='Disable color even if supported')
+    parser = argparse.ArgumentParser(description="Generate a directory tree structure")
+    parser.add_argument(
+        "path", nargs="?", default=".", help="Directory path to map (default: current directory)"
+    )
+    parser.add_argument("-d", "--max-depth", type=int, help="Maximum depth to traverse")
+    parser.add_argument("-s", "--size", action="store_true", help="Show file sizes")
+    parser.add_argument("-t", "--time", action="store_true", help="Show modification times")
+    parser.add_argument("-c", "--color", action="store_true", help="Colorize output")
+    parser.add_argument(
+        "-o", "--output", type=str, help="Output file path (default: tree.txt in target directory)"
+    )
+    parser.add_argument("--stats", action="store_true", help="Show summary statistics")
+    parser.add_argument("--no-color", action="store_true", help="Disable color even if supported")
 
     ignore_group = parser.add_mutually_exclusive_group()
-    ignore_group.add_argument('-i', '--ignore-pattern', type=str,
-                              help='Additional regex pattern to ignore')
-    ignore_group.add_argument('-I', '--ignore-patterns', type=str,
-                              help='File containing patterns to ignore')
-    ignore_group.add_argument('--no-ignore', action='store_true',
-                              help='Disable default ignore patterns')
-    ignore_group.add_argument('--show-all', action='store_true',
-                              help='Show all files (same as --no-ignore)')
+    ignore_group.add_argument(
+        "-i", "--ignore-pattern", type=str, help="Additional regex pattern to ignore"
+    )
+    ignore_group.add_argument(
+        "-I", "--ignore-patterns", type=str, help="File containing patterns to ignore"
+    )
+    ignore_group.add_argument(
+        "--no-ignore", action="store_true", help="Disable default ignore patterns"
+    )
+    ignore_group.add_argument(
+        "--show-all", action="store_true", help="Show all files (same as --no-ignore)"
+    )
     return parser
 
 
@@ -75,8 +73,7 @@ def create_tree_config(args: argparse.Namespace) -> TreeConfig:
     """Create tree configuration from arguments."""
     target_dir = Path(args.path).resolve()
     if not target_dir.exists():
-        print(
-            f"Error: Directory '{args.path}' does not exist", file=sys.stderr)
+        print(f"Error: Directory '{args.path}' does not exist", file=sys.stderr)
         sys.exit(1)
     if not target_dir.is_dir():
         print(f"Error: '{args.path}' is not a directory", file=sys.stderr)
@@ -84,7 +81,7 @@ def create_tree_config(args: argparse.Namespace) -> TreeConfig:
 
     patterns = get_ignore_patterns(args)
     use_color = args.color and not args.no_color and sys.stdout.isatty()
-    output_file = args.output if args.output else target_dir / 'tree.txt'
+    output_file = args.output if args.output else target_dir / "tree.txt"
 
     return TreeConfig(
         target_dir=target_dir,
@@ -106,12 +103,14 @@ def generate_output(config: TreeConfig) -> List[str]:
     lines = process_root_directory(config, stats)
 
     if config.show_stats:
-        lines.extend([
-            "\nSummary:",
-            f"Directories: {stats.directories}",
-            f"Files: {stats.files}",
-            *(f"Total size: {stats.total_size}" if config.node_config.show_size else [])
-        ])
+        lines.extend(
+            [
+                "\nSummary:",
+                f"Directories: {stats.directories}",
+                f"Files: {stats.files}",
+                *(f"Total size: {stats.total_size}" if config.node_config.show_size else []),
+            ]
+        )
 
     return lines
 
@@ -134,8 +133,8 @@ def main() -> None:
     config = create_tree_config(create_parser().parse_args())
     lines = generate_output(config)
 
-    with open(config.output_file, 'w', encoding='utf-8', newline='\r\n') as f:
-        f.write('\n'.join(lines))
+    with open(config.output_file, "w", encoding="utf-8", newline="\r\n") as f:
+        f.write("\n".join(lines))
 
-    print('\n'.join(lines))
+    print("\n".join(lines))
     print(f"\nTree structure has been written to {config.output_file}")

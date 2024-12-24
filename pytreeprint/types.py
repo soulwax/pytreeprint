@@ -1,4 +1,5 @@
 """Type definitions and shared classes for pytreeprint."""
+
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -6,6 +7,7 @@ from pathlib import Path
 @dataclass
 class TreeStats:
     """Statistics collector for tree generation."""
+
     directories: int = 0
     files: int = 0
     total_size: int = 0
@@ -20,6 +22,7 @@ class TreeStats:
 @dataclass
 class NodeConfig:
     """Configuration for tree node processing."""
+
     show_size: bool = False
     show_date: bool = False
     use_color: bool = False

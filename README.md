@@ -187,6 +187,7 @@ The command generates a `tree.txt` file in the root directory containing the tre
 
 ### High Priority
 
+- [ ] Rename and publish as a package on PyPI, modify script to be a CLI entry point
 - [ ] Add support for custom output formats (JSON, XML, YAML)
 - [ ] Add pattern support for file extensions (e.g., show only *.py files)
 - [ ] Allow specifying a start directory as command-line argument

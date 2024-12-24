@@ -220,8 +220,8 @@ GPL-3.0 License, see [LICENSE](LICENSE.txt) for details.
 
 ## Credits
 
-This project was inspired by the standard `tree` command and aims to provide a more feature-rich alternative for Windows users. Feel free to contribute or suggest new features to enhance the tool further. Pull requests are welcome!
+This project was inspired by the standard `tree` command and aims to provide a more feature-rich alternative for Windows users. Feel free to contribute or suggest new features to enhance the tool further.
 
 ## Contact / Author
 
-For issues, suggestions, or feedback, please contact the author at <https://github.com/soulwax>
+__For issues, suggestions, or feedback, please contact the author at <https://github.com/soulwax>, or create a new issue on GitHub, or submit a pull request, any feedback is welcome.__

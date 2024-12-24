@@ -1,5 +1,6 @@
 """Command line interface for pytreeprint."""
 from pathlib import Path
+from re import Pattern
 import sys
 import argparse
 from typing import Set, Optional
@@ -92,8 +93,15 @@ def process_root_directory(
 
         lines.append(f"{connector}{color_start}{item.name}{color_end}{info}")
         subtree = generate_tree(
-            item, "    " if is_last else "│   ", is_last, args.max_depth, 1,
-            stats, exclude_pattern, args.size, args.time, args.color
+            directory=item,
+            prefix="    " if is_last else "│   ",
+            max_depth=args.max_depth,
+            current_depth=1,
+            stats=stats,
+            exclude_pattern=exclude_pattern,
+            show_size=args.size,
+            show_date=args.time,
+            use_color=args.color
         )
         lines.extend(subtree)
 

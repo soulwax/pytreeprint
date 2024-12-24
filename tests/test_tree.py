@@ -1,18 +1,13 @@
 """Tests for the pytreeprint package."""
-import sys
-from pathlib import Path
 import pytest
+from pathlib import Path
 
+from pytreeprint.types import TreeStats
 from pytreeprint.tree import (
-    TreeStats,
     generate_tree,
     compile_ignore_pattern,
-    DEFAULT_IGNORE_PATTERNS,
+    DEFAULT_IGNORE_PATTERNS
 )
-
-# Add project root to Python path for test imports
-project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root))
 
 
 @pytest.fixture
@@ -90,6 +85,9 @@ def test_max_depth(mock_directory):
     nested.mkdir(parents=True)
     (nested / "deep_file.txt").write_text("deep")
 
+    # Create a file in level1 to ensure depth check works correctly
+    (mock_directory / "level1" / "shallow_file.txt").write_text("shallow")
+
     stats = TreeStats()
     tree_output = generate_tree(
         directory=mock_directory,
@@ -98,5 +96,8 @@ def test_max_depth(mock_directory):
     )
 
     # Verify depth limitation
-    assert not any("level2" in line for line in tree_output)
     assert any("level1" in line for line in tree_output)
+    assert any("shallow_file.txt" in line for line in tree_output)
+    assert not any("level2" in line for line in tree_output)
+    assert not any("level3" in line for line in tree_output)
+    assert not any("deep_file.txt" in line for line in tree_output)

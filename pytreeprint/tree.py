@@ -1,8 +1,10 @@
 """Core tree generation functionality."""
+from datetime import datetime
 from pathlib import Path
 import re
 from typing import Optional, Pattern, Tuple, Set
 
+from .types import TreeStats
 from .utils import process_directory_items
 
 DEFAULT_IGNORE_PATTERNS = {
@@ -29,21 +31,6 @@ FILE_COLORS = {
 }
 
 
-class TreeStats:
-    """Statistics collector for tree generation."""
-
-    def __init__(self):
-        self.directories = 0
-        self.files = 0
-        self.total_size = 0
-
-    def update_from_items(self, files: list[Path], show_size: bool = False) -> None:
-        """Update statistics from a list of files."""
-        self.files += len(files)
-        if show_size:
-            self.total_size += sum(f.stat().st_size for f in files)
-
-
 def get_size_str(size: int) -> str:
     """Convert size in bytes to human readable format."""
     for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
@@ -63,13 +50,14 @@ def compile_ignore_pattern(patterns: Set[str]) -> Optional[Pattern]:
 
 def parse_pattern_file(file_path: str) -> Set[str]:
     """Parse a file containing ignore patterns."""
+    patterns = set()
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
-            return {line.strip() for line in f
-                    if line.strip() and not line.startswith('#')}
-    except Exception as e:
+            patterns.update(line.strip() for line in f
+                            if line.strip() and not line.startswith('#'))
+    except OSError as e:
         print(f"Warning: Could not read pattern file {file_path}: {e}")
-        return set()
+    return patterns
 
 
 def get_color_for_file(path: Path, use_color: bool) -> Tuple[str, str]:
@@ -88,8 +76,6 @@ def get_color_for_file(path: Path, use_color: bool) -> Tuple[str, str]:
 
 def get_file_info(path: Path, show_size: bool, show_date: bool) -> str:
     """Get additional file information based on flags."""
-    from datetime import datetime
-
     info_parts = []
     if show_size and path.is_file():
         info_parts.append(f"[{get_size_str(path.stat().st_size)}]")
@@ -99,10 +85,26 @@ def get_file_info(path: Path, show_size: bool, show_date: bool) -> str:
     return " ".join(info_parts)
 
 
+def process_tree_node(
+    item: Path,
+    prefix: str,
+    is_last_item: bool,
+    show_size: bool,
+    show_date: bool,
+    use_color: bool,
+) -> str:
+    """Process a single tree node (file or directory)."""
+    connector = "└───" if is_last_item else "├───"
+    color_start, color_end = get_color_for_file(item, use_color)
+    info = get_file_info(item, show_size, show_date)
+    info = f" {info}" if info else ""
+    return f"{prefix}{connector}{color_start}{item.name}{color_end}{info}"
+
+
 def generate_tree(
     directory: Path,
-    prefix: str = "",
     *,  # Force keyword arguments
+    prefix: str = "",
     max_depth: Optional[int] = None,
     current_depth: int = 0,
     stats: Optional[TreeStats] = None,
@@ -115,9 +117,6 @@ def generate_tree(
     if stats is None:
         stats = TreeStats()
 
-    if max_depth is not None and current_depth > max_depth:
-        return []
-
     lines = []
     items = list(directory.iterdir())
     files, dirs = process_directory_items(items, stats, exclude_pattern)
@@ -125,23 +124,17 @@ def generate_tree(
     # Process files
     for index, item in enumerate(files):
         is_last_item = (index == len(files) - 1) and not dirs
-        connector = "└───" if is_last_item else "├───"
-        color_start, color_end = get_color_for_file(item, use_color)
-        info = get_file_info(item, show_size, show_date)
-        info = f" {info}" if info else ""
-        lines.append(
-            f"{prefix}{connector}{color_start}{item.name}{color_end}{info}")
+        lines.append(process_tree_node(
+            item, prefix, is_last_item, show_size, show_date, use_color))
 
     # Process directories
+    if max_depth is not None and current_depth >= max_depth:
+        return lines
+
     for index, item in enumerate(dirs):
         is_last_item = index == len(dirs) - 1
-        connector = "└───" if is_last_item else "├───"
-        color_start, color_end = get_color_for_file(item, use_color)
-        info = get_file_info(item, show_size, show_date)
-        info = f" {info}" if info else ""
-
-        lines.append(
-            f"{prefix}{connector}{color_start}{item.name}{color_end}{info}")
+        lines.append(process_tree_node(
+            item, prefix, is_last_item, show_size, show_date, use_color))
         new_prefix = prefix + ("    " if is_last_item else "│   ")
         lines.extend(generate_tree(
             directory=item,

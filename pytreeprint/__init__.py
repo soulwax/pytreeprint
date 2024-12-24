@@ -1,7 +1,7 @@
 """Enhanced directory tree visualization tool."""
 
+from .types import TreeStats
 from .tree import (
-    TreeStats,
     generate_tree,
     get_size_str,
     get_color_for_file,

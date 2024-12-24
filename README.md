@@ -216,7 +216,7 @@ The command generates a `tree.txt` file in the root directory containing the tre
 
 ## License
 
-GPL-3.0 License, see [LICENSE](LICENSE.txt) for details.
+GPL-3.0 License, see [LICENSE](LICENSE) for details.
 
 ## Credits
 

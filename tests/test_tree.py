@@ -7,7 +7,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 import pytest
-from pytreemap.tree import TreeStats, generate_tree
+from pytreeprint.tree import TreeStats, generate_tree
 
 @pytest.fixture
 def temp_directory(tmp_path):
@@ -39,7 +39,7 @@ def test_ignore_patterns(temp_directory):
     (temp_directory / "__pycache__" / "cache.pyc").write_text("")
     
     stats = TreeStats()
-    from pytreemap.tree import compile_ignore_pattern, DEFAULT_IGNORE_PATTERNS
+    from pytreeprint.tree import compile_ignore_pattern, DEFAULT_IGNORE_PATTERNS
     
     pattern = compile_ignore_pattern(DEFAULT_IGNORE_PATTERNS)
     tree_output = generate_tree(temp_directory, stats=stats, exclude_pattern=pattern)

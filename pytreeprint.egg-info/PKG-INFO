@@ -1,14 +1,14 @@
 Metadata-Version: 2.1
-Name: pytreemap
+Name: pytreeprint
 Version: 0.1.0
 Summary: Enhanced directory tree visualization tool
-Home-page: https://github.com/soulwax/pytreemap
+Home-page: https://github.com/soulwax/pyprintmap
 Author: soulwax
 Author-email: soulwax@nandcore.com
 Classifier: Development Status :: 4 - Beta
 Classifier: Environment :: Console
 Classifier: Intended Audience :: Developers
-Classifier: License :: OSI Approved :: MIT License
+Classifier: License :: OSI Approved :: GPL3 License
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.6

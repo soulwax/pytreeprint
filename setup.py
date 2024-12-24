@@ -1,13 +1,13 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="pytreemap",
+    name="pytreeprint",
     version="0.1.0",
     packages=find_packages(),
     install_requires=[],
     entry_points={
         "console_scripts": [
-            "treemap=pytreemap.cli:main",
+            "treemap=pytreeprint.cli:main",
         ],
     },
     author="soulwax",
@@ -15,12 +15,12 @@ setup(
     description="Enhanced directory tree visualization tool",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/soulwax/pytreemap",
+    url="https://github.com/soulwax/pyprintmap",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: GPL3 License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",

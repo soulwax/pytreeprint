@@ -1,0 +1,16 @@
+LICENSE
+MANIFEST.in
+README.md
+pyproject.toml
+requirements-dev.txt
+setup.py
+.github/workflows/python-package.yml
+pytreeprint/__init__.py
+pytreeprint/cli.py
+pytreeprint/tree.py
+pytreeprint.egg-info/PKG-INFO
+pytreeprint.egg-info/SOURCES.txt
+pytreeprint.egg-info/dependency_links.txt
+pytreeprint.egg-info/entry_points.txt
+pytreeprint.egg-info/top_level.txt
+tests/test_tree.py

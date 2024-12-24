@@ -25,13 +25,13 @@ jobs:
         pip install -r requirements-dev.txt
     - name: Lint with pylint
       run: |
-        pylint pytreemap tests
+        pylint pytreeprint tests
     - name: Check formatting with black
       run: |
         black --check .
     - name: Test with pytest
       run: |
-        pytest --cov=pytreemap tests/
+        pytest --cov=pytreeprint tests/
     - name: Build package
       run: |
         python -m build

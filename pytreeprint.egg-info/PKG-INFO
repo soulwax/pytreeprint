@@ -1,8 +1,8 @@
 Metadata-Version: 2.1
 Name: pytreeprint
-Version: 0.1.0
+Version: 0.2.15
 Summary: Enhanced directory tree visualization tool
-Home-page: https://github.com/soulwax/pyprintmap
+Home-page: https://github.com/soulwax/pytreemap
 Author: soulwax
 Author-email: soulwax@nandcore.com
 Classifier: Development Status :: 4 - Beta
@@ -210,7 +210,7 @@ The command generates a `tree.txt` file in the root directory containing the tre
 
 ### High Priority
 
-- [ ] Rename and publish as a package on PyPI, modify script to be a CLI entry point
+- [x] Rename and publish as a package on PyPI, modify script to be a CLI entry point
 - [ ] Add support for custom output formats (JSON, XML, YAML)
 - [ ] Add pattern support for file extensions (e.g., show only *.py files)
 - [ ] Allow specifying a start directory as command-line argument

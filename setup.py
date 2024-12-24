@@ -7,7 +7,7 @@ setup(
     install_requires=[],
     entry_points={
         "console_scripts": [
-            "treemap=pytreeprint.cli:main",
+            "pytreeprint=pytreeprint.cli:main",
         ],
     },
     author="soulwax",
@@ -15,7 +15,7 @@ setup(
     description="Enhanced directory tree visualization tool",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/soulwax/pyprintmap",
+    url="https://github.com/soulwax/pytreeprint",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",

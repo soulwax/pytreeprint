@@ -1,0 +1,2 @@
+[console_scripts]
+treemap = pytreemap.cli:main

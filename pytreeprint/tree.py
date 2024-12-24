@@ -3,7 +3,7 @@
 from datetime import datetime
 from pathlib import Path
 import re
-from typing import Optional, Pattern, Tuple, Set
+from typing import Optional, Pattern, Tuple, Set, List
 
 from .types import TreeStats, NodeConfig
 from .utils import process_directory_items
@@ -142,7 +142,7 @@ def generate_tree(
     show_size: bool = False,
     show_date: bool = False,
     use_color: bool = False,
-) -> list[str]:
+) -> List[str]:
     """Generate a Windows-style ASCII tree structure for the given directory."""
     if stats is None:
         stats = TreeStats()

@@ -1,104 +1,69 @@
 # pytreeprint
 
 A Python-based enhanced tree command that displays directory structures with additional features and customization options.
-This tool provides a more versatile alternative to the standard Windows `tree` command but probably not as powerful as the `tree` command in Unix-based systems yet.
-Helpful for understanding project structure and file distribution, as well as extending the standard `tree` command with additional features.
-Uses vary from codebase analysis to project documentation and file management.
 
-It is intended to be __put into a subdirectory of a project__ and __run from the main project directory__ to visualize the project structure in a tree.txt file or console output for now.
+## Overview
+
+`pytreeprint` is a versatile command-line tool for visualizing directory structures. It provides more features than the standard Windows `tree` command and offers rich customization for project analysis, documentation, and file management.
 
 ## Features
 
-- Windows-style directory tree visualization
-- Smart file and directory grouping
-- Colorized output for different file types
-- File size and timestamp information
-- Configurable ignore patterns
-- Summary statistics
-- Depth control
+- 📂 Detailed directory tree visualization
+- 🎨 Colorized output with file type-based coloring
+- 📏 Optional file size display
+- 🕒 Optional timestamp information
+- 🚫 Configurable ignore patterns
+- 📊 Summary statistics
+- 🌲 Depth control
 
-## Installation
+## Installation **(PENDING PUBLISHING)**
 
-1. Clone this repository
-2. Ensure Python 3.6+ is installed
-3. Place the script in your project's `scripts` directory
+Install directly from PyPI:
+
+```bash
+pip install pytreeprint
+```
+
+Until it is published, you can clone the repository and run the script directly:
+
+```bash
+git clone https://github.com/soulwax/pytreeprint.git
+```
+
+Then run the script from the root directory:
+
+```bash
+pip install -e . 
+```
+
+This installs the package as editable, create a symlink to the script globally while changes are reflected immediately.
+
+Then:
 
 ## Usage
 
-```bash
-python tree.py [options]
+### Basic tree view
+
+```shell
+pytreeprint
 ```
 
-### Basic Examples
+### Show with colors and file sizes
 
-```bash
-# Simple tree view
-python tree.py
-
-# Show with colors and file sizes
-python tree.py -c -s
-
-# Show everything (including normally ignored directories)
-python tree.py --show-all
-
-# Show with file sizes, timestamps, and statistics
-python tree.py -c -s -t --stats
+```shell
+pytreeprint -c -s
 ```
 
-### Use with node
+### Show everything (including normally ignored directories)
 
-```bash
-# Add script to package.json, append any flags as needed
-"scripts": {
-  # ...
-  # Basic tree view
-  "tree": "python scripts/tree.py", 
-  # ...
-}
+```shell
+pytreeprint --show-all
 ```
 
-```bash
-# Run with npm
-npm run tree
-```
+### Show with file sizes, timestamps, and statistics
 
-### Use with pipenv
-
-```bash
-# Add script to Pipfile, append any flags as needed
-[scripts]
-tree = "python scripts/tree.py"
-```
-
-```bash
-# Run with pipenv
-pipenv run tree
-```
-
-### Use with poetry
-
-```bash
-# Add script to pyproject.toml, append any flags as needed
-[tool.poetry.scripts]
-tree = "scripts.tree:main"
-```
-
-```bash
-# Run with poetry
-poetry run tree
-```
-
-### Use with `Makefile`
-
-```makefile
-# Add a target to your Makefile
-tree:
-    python scripts/tree.py
-```
-
-```bash
-# Run with make
-make tree
+```shell
+pytreeprint -c -s -t --stats
 ```
 
 ### Command Line Options
@@ -149,7 +114,7 @@ When using the `-c` option, files are color-coded by type:
 - 🔵 Blue - Directories
 - 🟢 Green - Executable files (.exe, .sh, .py, etc.)
 - 🟡 Yellow - Symlinks
-- �cyan Cyan - Media files (images, audio, video)
+- 💠 Cyan - Media files (images, audio, video)
 - 🟣 Magenta - Archives (.zip, .tar, etc.)
 - 🔴 Red - Special files (config files, json, etc.)
 
@@ -224,4 +189,4 @@ This project was inspired by the standard `tree` command and aims to provide a m
 
 ## Contact / Author
 
-__For issues, suggestions, or feedback, please contact the author at <https://github.com/soulwax>, or create a new issue on GitHub, or submit a pull request, any feedback is welcome.__
+**For issues, suggestions, or feedback, please contact the author at <https://github.com/soulwax>, or create a new issue on GitHub, or submit a pull request, any feedback is welcome.**

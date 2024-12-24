@@ -1,4 +1,4 @@
-# TreeVI
+# pytreeprint
 
 A Python-based enhanced tree command that displays directory structures with additional features and customization options.
 This tool provides a more versatile alternative to the standard Windows `tree` command but probably not as powerful as the `tree` command in Unix-based systems yet.

@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 from pathlib import Path
+from typing import List
 
 
 @dataclass
@@ -12,7 +13,7 @@ class TreeStats:
     files: int = 0
     total_size: int = 0
 
-    def update_from_items(self, files: list[Path], show_size: bool = False) -> None:
+    def update_from_items(self, files: List[Path], show_size: bool = False) -> None:
         """Update statistics from a list of files."""
         self.files += len(files)
         if show_size:

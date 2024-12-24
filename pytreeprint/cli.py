@@ -133,8 +133,8 @@ def main() -> None:
     config = create_tree_config(create_parser().parse_args())
     lines = generate_output(config)
 
-    with open(config.output_file, "w", encoding="utf-8", newline="\r\n") as f:
-        f.write("\n".join(lines))
+    with open(config.output_file, "w", encoding="utf-8", newline="\r\n") as output_file:
+        output_file.write("\n".join(lines))
 
     print("\n".join(lines))
     print(f"\nTree structure has been written to {config.output_file}")

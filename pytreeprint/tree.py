@@ -87,10 +87,12 @@ def parse_pattern_file(file_path: str) -> Set[str]:
     """Parse a file containing ignore patterns."""
     patterns = set()
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
-            patterns.update(line.strip() for line in f if line.strip() and not line.startswith("#"))
-    except OSError as e:
-        print(f"Warning: Could not read pattern file {file_path}: {e}")
+        with open(file_path, "r", encoding="utf-8") as pattern_file:
+            patterns.update(
+                line.strip() for line in pattern_file if line.strip() and not line.startswith("#")
+            )
+    except OSError as operating_system_error:
+        print(f"Warning: Could not read pattern file {file_path}: {operating_system_error}")
     return patterns
 
 

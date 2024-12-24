@@ -155,7 +155,7 @@ When using the `-c` option, files are color-coded by type:
 
 ## Output Example
 
-```
+```powershell
 Directory of D:\Project
 
 ├───README.md [2.5KB] [2024-01-24 15:30]

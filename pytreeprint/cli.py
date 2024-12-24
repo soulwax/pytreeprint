@@ -1,14 +1,27 @@
 """Command line interface for pytreeprint."""
+from dataclasses import dataclass
 from pathlib import Path
 from re import Pattern
 import sys
 import argparse
-from typing import Set, Optional
+from typing import Set, Optional, List
 
-from .tree import (TreeStats, generate_tree, get_color_for_file,
-                   get_file_info, compile_ignore_pattern, parse_pattern_file,
-                   DEFAULT_IGNORE_PATTERNS)
-from .utils import process_directory_items
+from .types import TreeStats, NodeConfig
+from .tree import (
+    generate_tree,
+    compile_ignore_pattern, parse_pattern_file, DEFAULT_IGNORE_PATTERNS
+)
+
+
+@dataclass
+class TreeConfig:
+    """Tree generation configuration."""
+    target_dir: Path
+    output_file: Path
+    exclude_pattern: Optional[Pattern]
+    node_config: NodeConfig
+    max_depth: Optional[int] = None
+    show_stats: bool = False
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -41,11 +54,10 @@ def create_parser() -> argparse.ArgumentParser:
                               help='Disable default ignore patterns')
     ignore_group.add_argument('--show-all', action='store_true',
                               help='Show all files (same as --no-ignore)')
-
     return parser
 
 
-def get_ignore_patterns(args) -> Set[str]:
+def get_ignore_patterns(args: argparse.Namespace) -> Set[str]:
     """Determine which patterns to ignore based on arguments."""
     if args.no_ignore or args.show_all:
         return set()
@@ -59,61 +71,8 @@ def get_ignore_patterns(args) -> Set[str]:
     return patterns
 
 
-def process_root_directory(
-    directory: Path,
-    stats: TreeStats,
-    exclude_pattern: Optional[Pattern],
-    args
-) -> list[str]:
-    """Process the root directory and generate initial output lines."""
-    lines = [f"\nDirectory of {directory}\n"]
-
-    items = list(directory.iterdir())
-    files, dirs = process_directory_items(items, stats, exclude_pattern)
-
-    if args.size:
-        stats.total_size += sum(f.stat().st_size for f in files)
-
-    # Process files
-    for index, item in enumerate(files):
-        is_last = index == len(files) - 1 and not dirs
-        connector = "└───" if is_last else "├───"
-        color_start, color_end = get_color_for_file(item, args.color)
-        info = get_file_info(item, args.size, args.time)
-        info = f" {info}" if info else ""
-        lines.append(f"{connector}{color_start}{item.name}{color_end}{info}")
-
-    # Process directories
-    for index, item in enumerate(dirs):
-        is_last = index == len(dirs) - 1
-        connector = "└───" if is_last else "├───"
-        color_start, color_end = get_color_for_file(item, args.color)
-        info = get_file_info(item, args.size, args.time)
-        info = f" {info}" if info else ""
-
-        lines.append(f"{connector}{color_start}{item.name}{color_end}{info}")
-        subtree = generate_tree(
-            directory=item,
-            prefix="    " if is_last else "│   ",
-            max_depth=args.max_depth,
-            current_depth=1,
-            stats=stats,
-            exclude_pattern=exclude_pattern,
-            show_size=args.size,
-            show_date=args.time,
-            use_color=args.color
-        )
-        lines.extend(subtree)
-
-    return lines
-
-
-def main() -> None:
-    """Main entry point for the CLI."""
-    parser = create_parser()
-    args = parser.parse_args()
-
-    # Validate directory
+def create_tree_config(args: argparse.Namespace) -> TreeConfig:
+    """Create tree configuration from arguments."""
     target_dir = Path(args.path).resolve()
     if not target_dir.exists():
         print(
@@ -123,32 +82,60 @@ def main() -> None:
         print(f"Error: '{args.path}' is not a directory", file=sys.stderr)
         sys.exit(1)
 
-    # Setup
-    patterns_to_ignore = get_ignore_patterns(args)
-    exclude_pattern = compile_ignore_pattern(patterns_to_ignore)
+    patterns = get_ignore_patterns(args)
     use_color = args.color and not args.no_color and sys.stdout.isatty()
-    stats = TreeStats()
     output_file = args.output if args.output else target_dir / 'tree.txt'
 
-    # Generate tree
-    lines = process_root_directory(target_dir, stats, exclude_pattern, args)
+    return TreeConfig(
+        target_dir=target_dir,
+        output_file=Path(output_file),
+        exclude_pattern=compile_ignore_pattern(patterns),
+        node_config=NodeConfig(
+            show_size=args.size,
+            show_date=args.time,
+            use_color=use_color,
+        ),
+        max_depth=args.max_depth,
+        show_stats=args.stats,
+    )
 
-    # Add statistics if requested
-    if args.stats:
+
+def generate_output(config: TreeConfig) -> List[str]:
+    """Generate tree output based on configuration."""
+    stats = TreeStats()
+    lines = process_root_directory(config, stats)
+
+    if config.show_stats:
         lines.extend([
             "\nSummary:",
             f"Directories: {stats.directories}",
             f"Files: {stats.files}",
-            *(f"Total size: {stats.total_size}" if args.size else [])
+            *(f"Total size: {stats.total_size}" if config.node_config.show_size else [])
         ])
 
-    # Write output
-    with open(output_file, 'w', encoding='utf-8', newline='\r\n') as f:
+    return lines
+
+
+def process_root_directory(config: TreeConfig, stats: TreeStats) -> List[str]:
+    """Process the root directory and generate initial output."""
+    return generate_tree(
+        directory=config.target_dir,
+        max_depth=config.max_depth,
+        stats=stats,
+        exclude_pattern=config.exclude_pattern,
+        show_size=config.node_config.show_size,
+        show_date=config.node_config.show_date,
+        use_color=config.node_config.use_color,
+    )
+
+
+def main() -> None:
+    """Main entry point for the CLI."""
+    config = create_tree_config(create_parser().parse_args())
+    lines = generate_output(config)
+
+    with open(config.output_file, 'w', encoding='utf-8', newline='\r\n') as f:
         f.write('\n'.join(lines))
 
     print('\n'.join(lines))
-    print(f"\nTree structure has been written to {output_file}")
-
-
-if __name__ == '__main__':
-    main()
+    print(f"\nTree structure has been written to {config.output_file}")

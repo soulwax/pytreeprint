@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 from typing import Optional, Pattern, Tuple, Set
 
-from .types import TreeStats
+from .types import TreeStats, NodeConfig
 from .utils import process_directory_items
 
 DEFAULT_IGNORE_PATTERNS = {
@@ -88,22 +88,21 @@ def get_file_info(path: Path, show_size: bool, show_date: bool) -> str:
 def process_tree_node(
     item: Path,
     prefix: str,
-    is_last_item: bool,
-    show_size: bool,
-    show_date: bool,
-    use_color: bool,
+    config: NodeConfig,
+    is_last_item: bool = False
 ) -> str:
     """Process a single tree node (file or directory)."""
     connector = "└───" if is_last_item else "├───"
-    color_start, color_end = get_color_for_file(item, use_color)
-    info = get_file_info(item, show_size, show_date)
+    color_start, color_end = get_color_for_file(item, config.use_color)
+    info = get_file_info(item, config.show_size, config.show_date)
+
     info = f" {info}" if info else ""
     return f"{prefix}{connector}{color_start}{item.name}{color_end}{info}"
 
 
 def generate_tree(
     directory: Path,
-    *,  # Force keyword arguments
+    *,  # Ensure all additional params are keyword-only
     prefix: str = "",
     max_depth: Optional[int] = None,
     current_depth: int = 0,
@@ -124,8 +123,14 @@ def generate_tree(
     # Process files
     for index, item in enumerate(files):
         is_last_item = (index == len(files) - 1) and not dirs
+        node_config = NodeConfig(
+            show_size=show_size, show_date=show_date, use_color=use_color)
         lines.append(process_tree_node(
-            item, prefix, is_last_item, show_size, show_date, use_color))
+            item=item,
+            prefix=prefix,
+            config=node_config,
+            is_last_item=is_last_item
+        ))
 
     # Process directories
     if max_depth is not None and current_depth >= max_depth:
@@ -133,8 +138,16 @@ def generate_tree(
 
     for index, item in enumerate(dirs):
         is_last_item = index == len(dirs) - 1
+        node_config = NodeConfig(
+            show_size=show_size, show_date=show_date, use_color=use_color)
+
         lines.append(process_tree_node(
-            item, prefix, is_last_item, show_size, show_date, use_color))
+            item=item,
+            prefix=prefix,
+            config=node_config,
+            is_last_item=is_last_item
+        ))
+        # Use the snippet here for recursive traversal
         new_prefix = prefix + ("    " if is_last_item else "│   ")
         lines.extend(generate_tree(
             directory=item,

@@ -1,2 +1,2 @@
 [console_scripts]
-pytreeprint = pytreemap.cli:main
+pytreeprint = pytreeprint.cli:main

@@ -29,10 +29,10 @@ jobs:
           pylint src/pytreeprint tests
       - name: Check formatting with black
         run: |
-          black --check src tests
+          black --check src/pytreeprint tests
       - name: Test with pytest
         run: |
-          pytest --cov=src/pytree_print_soulwax tests/
+          pytest --cov=src/pytreeprint tests/
       - name: Build package
         run: |
           python -m build

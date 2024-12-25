@@ -73,11 +73,7 @@ def create_tree_config(args: argparse.Namespace) -> TreeConfig:
     """Create tree configuration from arguments."""
     target_dir = Path(args.path).resolve()
     if not target_dir.exists():
-        print(
-            f"Error: Directory '{
-              args.path}' does not exist",
-            file=sys.stderr,
-        )
+        print("Error: Directory '{}' does not exist".format(args.path), file=sys.stderr)
         sys.exit(1)
     if not target_dir.is_dir():
         print(f"Error: '{args.path}' is not a directory", file=sys.stderr)

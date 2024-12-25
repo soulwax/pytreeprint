@@ -93,8 +93,7 @@ def parse_pattern_file(file_path: str) -> Set[str]:
             )
     except OSError as operating_system_error:
         print(
-            f"Warning: Could not read pattern file {
-              file_path}: {operating_system_error}"
+            "Warning: Could not read pattern file {}: {}".format(file_path, operating_system_error)
         )
     return patterns
 

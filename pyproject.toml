@@ -5,11 +5,13 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools_scm]
 write_to = "src/pytreeprint/_version.py"
 
-[tool.black]
+[tool.black] # Error `black`: Additional properties are not allowed ('string-processing-mode' was unexpected)Even Better TOML
+preview = true
 line-length = 100
 target-version = ['py36', 'py37', 'py38', 'py39', 'py310', 'py311']
 
 [tool.isort]
+string-processing-mode = "python"
 profile = "black"
 multi_line_output = 3
 

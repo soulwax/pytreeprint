@@ -4,8 +4,12 @@ from pathlib import Path
 
 import pytest
 
-from pytreeprint.types import TreeStats
-from pytreeprint.tree import generate_tree, compile_ignore_pattern, DEFAULT_IGNORE_PATTERNS
+from src.pytreeprint.types import TreeStats
+from src.pytreeprint.tree import (
+    generate_tree,
+    compile_ignore_pattern,
+    DEFAULT_IGNORE_PATTERNS,
+)
 
 
 @pytest.fixture

@@ -92,10 +92,7 @@ def parse_pattern_file(file_path: str) -> Set[str]:
                 line.strip() for line in pattern_file if line.strip() and not line.startswith("#")
             )
     except OSError as operating_system_error:
-        print(
-            f"Warning: Could not read pattern file {
-              file_path}: {operating_system_error}"
-        )
+        print(f"Warning: Could not read pattern file {file_path}: {operating_system_error}")
     return patterns
 
 
@@ -178,7 +175,8 @@ def generate_tree(
                 item=item, prefix=prefix, config=node_config, is_last_item=is_last_item
             )
         )
-        # Use the snippet here for recursive traversal
+
+        # Use spaces for recursive traversal
         new_prefix = prefix + ("    " if is_last_item else "│   ")
         lines.extend(
             generate_tree(

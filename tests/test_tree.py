@@ -96,3 +96,4 @@ def test_max_depth(test_directory: Path) -> None:
     assert not any("level2" in line for line in tree_output)
     assert not any("level3" in line for line in tree_output)
     assert not any("deep_file.txt" in line for line in tree_output)
+    assert not any("level1" in line for line in tree_output if "shallow_file.txt" in line)

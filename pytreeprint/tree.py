@@ -92,7 +92,10 @@ def parse_pattern_file(file_path: str) -> Set[str]:
                 line.strip() for line in pattern_file if line.strip() and not line.startswith("#")
             )
     except OSError as operating_system_error:
-        print(f"Warning: Could not read pattern file {file_path}: {operating_system_error}")
+        print(
+            f"Warning: Could not read pattern file {
+              file_path}: {operating_system_error}"
+        )
     return patterns
 
 
@@ -170,7 +173,6 @@ def generate_tree(
     for index, item in enumerate(dirs):
         is_last_item = index == len(dirs) - 1
         node_config = NodeConfig(show_size=show_size, show_date=show_date, use_color=use_color)
-
         lines.append(
             process_tree_node(
                 item=item, prefix=prefix, config=node_config, is_last_item=is_last_item

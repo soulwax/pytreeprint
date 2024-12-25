@@ -6,7 +6,9 @@ pytest.txt
 requirements-dev.txt
 setup.py
 .github/workflows/python-package.yml
+dist/pytreeprint-0.2.15-py3.12.egg
 pytreeprint/__init__.py
+pytreeprint/__main__.py
 pytreeprint/cli.py
 pytreeprint/tree.py
 pytreeprint/types.py

@@ -2,6 +2,11 @@
 
 A Python-based enhanced tree command that displays directory structures with additional features and customization options.
 
+## Prerequisites
+
+- Python 3.8 or higher
+- No additional dependencies required
+
 ## Overview
 
 `pytreeprint` is a versatile command-line tool for visualizing directory structures. It provides more features than the standard Windows `tree` command and offers rich customization for project analysis, documentation, and file management.

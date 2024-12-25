@@ -32,7 +32,7 @@ jobs:
           black --check src/pytreeprint tests
       - name: Test with pytest
         run: |
-          pytest --cov=src/pytreeprint tests/
+          pytest --cov=pytreeprint tests/
       - name: Build package
         run: |
           python -m build

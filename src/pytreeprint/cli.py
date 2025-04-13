@@ -1,14 +1,19 @@
 """Command line interface for pytreeprint."""
 
+import argparse
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from re import Pattern
-import sys
-import argparse
-from typing import Set, Optional, List
+from typing import List, Optional, Set
 
-from .types import TreeStats, NodeConfig
-from .tree import generate_tree, compile_ignore_pattern, parse_pattern_file, DEFAULT_IGNORE_PATTERNS
+from .tree import (
+    DEFAULT_IGNORE_PATTERNS,
+    compile_ignore_pattern,
+    generate_tree,
+    parse_pattern_file,
+)
+from .types import NodeConfig, TreeStats
 
 
 @dataclass
@@ -100,7 +105,13 @@ def create_tree_config(args: argparse.Namespace) -> TreeConfig:
 def generate_output(config: TreeConfig) -> List[str]:
     """Generate tree output based on configuration."""
     stats = TreeStats()
-    lines = process_root_directory(config, stats)
+
+    # Start with the root directory name
+    lines = [config.target_dir.name]
+
+    # Process the root directory contents
+    tree_lines = process_root_directory(config, stats)
+    lines.extend(tree_lines)
 
     if config.show_stats:
         lines.extend(

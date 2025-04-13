@@ -1,11 +1,11 @@
 """Core tree generation functionality."""
 
+import re
 from datetime import datetime
 from pathlib import Path
-import re
-from typing import Optional, Pattern, Tuple, Set, List
+from typing import List, Optional, Pattern, Set, Tuple
 
-from .types import TreeStats, NodeConfig
+from .types import NodeConfig, TreeStats
 from .utils import process_directory_items
 
 DEFAULT_IGNORE_PATTERNS = {
@@ -131,8 +131,11 @@ def process_tree_node(
     color_start, color_end = get_color_for_file(item, config.use_color)
     info = get_file_info(item, config.show_size, config.show_date)
 
+    # Add trailing slash to directories
+    display_name = f"{item.name}/" if item.is_dir() else item.name
+
     info = f" {info}" if info else ""
-    return f"{prefix}{connector}{color_start}{item.name}{color_end}{info}"
+    return f"{prefix}{connector}{color_start}{display_name}{color_end}{info}"
 
 
 def generate_tree(
